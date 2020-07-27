@@ -121,28 +121,21 @@ There are many customization options:
 | `borderRadius`              | The `BorderRadius` of the card. <br> When not specified, defaults to `BorderRadius.circular(4)`.
 | `hintStyle`                 | The `TextStyle` for the hint in the `TextField`.
 | `queryStyle`                | The `TextStyle` for the input in the `TextField`.
-| `clearQueryOnClose`         | Whether the current query should be cleared when
-the `FloatingSearchBar` was closed. <br> When not specifed, defaults to `true`.
+| `clearQueryOnClose`         | Whether the current query should be cleared when the `FloatingSearchBar` was closed. <br> When not specifed, defaults to `true`.
 | `showDrawerHamburger`       | Whether a hamburger menu should be shown when there is a `Scaffold` with a `Drawer` in the widget tree.
-| `closeOnBackdropTap`        | Whether the `FloatingSearchBar` should be closed when
-the backdrop was tapped. <br> When not specified, defaults to `true`.
-| `progress`                  | The progress of the `LinearProgressIndicator` inside the card. <br> When set to a `double` between [0..1], will show
-show a determined `LinearProgressIndicator`. <br> When set to `true`, the `FloatingSearchBar` will show an indetermined `LinearProgressIndicator`. <br> When `null` or `false`, will hide the `LinearProgressIndicator`. <br> When not specified, defaults to `null`.
+| `closeOnBackdropTap`        | Whether the `FloatingSearchBar` should be closed when the backdrop was tapped. <br> When not specified, defaults to `true`.
+| `progress`                  | The progress of the `LinearProgressIndicator` inside the card. <br> When set to a `double` between `0..1`, will show show a determined `LinearProgressIndicator`. <br> When set to `true`, the `FloatingSearchBar` will show an indetermined `LinearProgressIndicator`. <br> When `null` or `false`, will hide the `LinearProgressIndicator`. <br> When not specified, defaults to `null`.
 | `transitionDuration`       |  The duration of the animation between opened and closed state.
-| `transitionCurve`          |  The curve for the animation between opened and closed
-state.
-| `debounceDelay`            |  The delay between the time the user stopped typing
-and the invocation of the `onQueryChanged` callback. <br> This is useful for example if you want to avoid doing expensive tasks, such as making a network call, for every single character.
+| `transitionCurve`          |  The curve for the animation between opened and closed state.
+| `debounceDelay`            |  The delay between the time the user stopped typing and the invocation of the `onQueryChanged` callback. <br> This is useful for example if you want to avoid doing expensive tasks, such as making a network call, for every single character.
 | `title`                    | A widget that is shown in place of the `TextField` when the `FloatingSearchBar` is closed.
 | `title`                    | The text value of the hint of the `TextField`.
 | `actions`                  | A list of widgets displayed in a row after the `TextField`. <br> Consider using `FloatingSearchBarActions` for more advanced actions that can interact with the `FloatingSearchBar`. <br> In LTR languages, they will be displayed to the left of the `TextField`.
 | `startActions`             | A list of widgets displayed in a row before the `TextField`. <br> Consider using `FloatingSearchBarActions` for more advanced actions that can interact with the `FloatingSearchBar`. <br> In LTR languages, they will be displayed to the right of the `TextField`. 
-| `onQueryChanged`   | A callback that gets invoked when the input of
-the query inside the `TextField` changed.
+| `onQueryChanged`   | A callback that gets invoked when the input of the query inside the `TextField` changed.
 | `onSubmitted`   | A callback that gets invoked when the user submitted their query (e.g. hit the search button).
 | `onFocusChanged`            | A callback that gets invoked when the `FloatingSearchBar` receives or looses focus.
-| `transition`                | The transition to be used for animating between closed
-and opened state. See below for a list of all available transitions.
+| `transition`                | The transition to be used for animating between closed and opened state. See below for a list of all available transitions.
 | `transition`                | The transition to be used for animating between closed
 and opened state. See below for a list of all available transitions.
 | `builder`                   | The builder for the body of this `FloatingSearchBar`. <br> Usually, a list of items. Note that unless `isScrollControlled` is set to `true`, the body of a `FloatingSearchBar` must not have an unbounded height meaning that `shrinkWrap` should be set to `true` on all `Scrollables`.
