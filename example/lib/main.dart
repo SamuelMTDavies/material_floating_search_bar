@@ -100,7 +100,7 @@ class Home extends StatelessWidget {
           debounceDelay: const Duration(milliseconds: 500),
           onQueryChanged: model.onQueryChanged,
           transition: SlideFadeFloatingSearchBarTransition(translation: 48.0),
-          bodyBuilder: (context, transition) {
+          builder: (context, transition) {
             return Material(
               color: Colors.white,
               elevation: 4.0,

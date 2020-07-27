@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'floating_search_bar_actions.dart';
@@ -13,7 +14,7 @@ import 'widgets/widgets.dart';
 
 // ignore_for_file: public_member_api_docs
 
-typedef FloatingSearchBarBodyBuilder = Widget Function(
+typedef FloatingSearchBarBuilder = Widget Function(
     BuildContext context, Animation<double> transition);
 
 typedef OnQueryChangeCallback = void Function(String query);
@@ -239,7 +240,7 @@ class FloatingSearchBar extends ImplicitAnimation {
   /// is set to `true`, the body of a [FloatingSearchBar] must not
   /// have an unbounded height meaning that `shrinkWrap` should be set
   /// to `true` on all [Scrollable]s.
-  final FloatingSearchBarBodyBuilder bodyBuilder;
+  final FloatingSearchBarBuilder builder;
 
   /// The controller for this [FloatingSearchBar] which can be used
   /// to programatically open, close, show or hide the [FloatingSearchBar].
@@ -252,6 +253,14 @@ class FloatingSearchBar extends ImplicitAnimation {
   /// The [TextInputType] of the [TextField]
   /// of this [FloatingSearchBar].
   final TextInputType textInputType;
+
+  /// Enable or disable autocorrection of the [TextField] of 
+  /// this [FloatingSearchBar].
+  final bool autocorrect;
+
+  /// The [ToolbarOptions] of the [TextField] of 
+  /// this [FloatingSearchBar].
+  final ToolbarOptions toolbarOptions;
 
   // * --- Scrolling --- *
   /// Whether the body of this [FloatingSearchBar] is using its
@@ -310,18 +319,20 @@ class FloatingSearchBar extends ImplicitAnimation {
     this.actions,
     this.startActions,
     this.onQueryChanged,
-    this.onFocusChanged,
     this.onSubmitted,
+    this.onFocusChanged,
     this.transition,
-    @required this.bodyBuilder,
+    @required this.builder,
     this.controller,
     this.textInputAction = TextInputAction.search,
     this.textInputType,
+    this.autocorrect = true,
+    this.toolbarOptions,
     this.isScrollControlled = true,
     this.physics,
     this.scrollController,
     this.scrollPadding = const EdgeInsets.symmetric(vertical: 16),
-  })  : assert(bodyBuilder != null),
+  }) : assert(builder != null),
         assert(progress == null || (progress is num || progress is bool)),
         super(key, implicitDuration, implicitCurve);
 
@@ -411,10 +422,12 @@ class _FloatingSearchBarState
       onFocusChanged: widget.onFocusChanged,
       onSubmitted: widget.onSubmitted,
       transition: widget.transition,
-      bodyBuilder: widget.bodyBuilder,
+      bodyBuilder: widget.builder,
       controller: widget.controller,
       textInputAction: widget.textInputAction,
       textInputType: widget.textInputType,
+      autocorrect: widget.autocorrect,
+      toolbarOptions: widget.toolbarOptions,
       isScrollControlled: widget.isScrollControlled,
       physics: widget.physics,
       scrollController: widget.scrollController,
@@ -442,10 +455,12 @@ class _FloatingSearchBar extends StatefulWidget {
   final OnFocusChangeCallback onFocusChanged;
   final OnQueryChangeCallback onSubmitted;
   final FloatingSearchBarTransition transition;
-  final FloatingSearchBarBodyBuilder bodyBuilder;
+  final FloatingSearchBarBuilder bodyBuilder;
   final FloatingSearchBarController controller;
   final TextInputAction textInputAction;
   final TextInputType textInputType;
+  final bool autocorrect;
+  final ToolbarOptions toolbarOptions;
 
   // * --- Scrolling --- *
   final bool isScrollControlled;
@@ -474,6 +489,8 @@ class _FloatingSearchBar extends StatefulWidget {
     @required this.controller,
     @required this.textInputAction,
     @required this.textInputType,
+    @required this.autocorrect,
+    @required this.toolbarOptions,
     @required this.isScrollControlled,
     @required this.physics,
     @required this.scrollController,
@@ -899,6 +916,8 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
           focusNode: _input.node,
           maxLines: 1,
           autofocus: false,
+          autocorrect: widget.autocorrect,
+          toolbarOptions: widget.toolbarOptions,
           cursorColor: accentColor,
           style: style.queryStyle,
           textInputAction: widget.textInputAction,
