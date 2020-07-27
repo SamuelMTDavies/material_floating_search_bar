@@ -69,7 +69,7 @@ abstract class FloatingSearchBarTransition {
 /// which expands to eventually fill all of its available space,
 /// similar to the ones in Gmail or Google Maps.
 ///
-/// An example of this can be viewed [here](https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/expanding_example.gif):
+/// An example of this can be viewed [here](https://github.com/bnxm/material_floating_search_bar/blob/master/assets/expanding_example.gif):
 /// {@endtemplate}
 class ExpandingFloatingSearchBarTransition extends FloatingSearchBarTransition {
   /// The elevation of the bar to create a lift on scroll effect
@@ -244,7 +244,7 @@ abstract class OverlayingFloatingSearchBarTransition extends FloatingSearchBarTr
 /// {@template circular_floating_search_bar_transition}
 /// which clips its child in an expanding circle.
 ///
-/// An example of this can be viewed [here](https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/circular_example.gif):
+/// An example of this can be viewed [here](https://github.com/bnxm/material_floating_search_bar/blob/master/assets/circular_example.gif):
 /// {@endtemplate}
 class CircularFloatingSearchBarTransition extends OverlayingFloatingSearchBarTransition {
   /// Creates a [FloatingSearchBarTransition],
@@ -278,7 +278,7 @@ class CircularFloatingSearchBarTransition extends OverlayingFloatingSearchBarTra
 /// {@template fade_in_floating_search_bar_transition}
 /// which fades and vertically translates its child.
 /// 
-/// An example of this can be viewed [here](https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/slide_fade_example.gif)
+/// An example of this can be viewed [here](https://github.com/bnxm/material_floating_search_bar/blob/master/assets/slide_fade_example.gif)
 /// {@endtemplate}
 class SlideFadeFloatingSearchBarTransition extends OverlayingFloatingSearchBarTransition {
   final double translation;
