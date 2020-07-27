@@ -136,8 +136,6 @@ There are many customization options:
 | `onSubmitted`   | A callback that gets invoked when the user submitted their query (e.g. hit the search button).
 | `onFocusChanged`            | A callback that gets invoked when the `FloatingSearchBar` receives or looses focus.
 | `transition`                | The transition to be used for animating between closed and opened state. See below for a list of all available transitions.
-| `transition`                | The transition to be used for animating between closed
-and opened state. See below for a list of all available transitions.
 | `builder`                   | The builder for the body of this `FloatingSearchBar`. <br> Usually, a list of items. Note that unless `isScrollControlled` is set to `true`, the body of a `FloatingSearchBar` must not have an unbounded height meaning that `shrinkWrap` should be set to `true` on all `Scrollables`.
 | `controller`                | The controller for this `FloatingSearchBar` which can be used to programatically open, close, show or hide the `FloatingSearchBar`.
 
