@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// ignore_for_file: public_member_api_docs
+
 class SizeFadeTransition extends StatefulWidget {
   final Animation<double> animation;
   final Curve curve;

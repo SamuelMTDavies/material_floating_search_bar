@@ -4,11 +4,40 @@ import 'floating_search_bar.dart';
 import 'util/util.dart';
 import 'widgets/widgets.dart';
 
+/// A widget to display in a row before or after the
+/// input text of a [FloatingSearchBar].
+///
+/// Typically this widget wraps a [CircularButton].
 class FloatingSearchBarAction extends StatefulWidget {
+  /// The action.
+  ///
+  /// Typically a [CircularButton].
   final Widget child;
+
+  /// A builder that can be used when the action needs
+  /// to react to changes in its [FloatingSearchBar].
+  ///
+  /// View [FloatingSearchBarAction.searchToClear] for an example.
   final Widget Function(BuildContext context, Animation animation) builder;
+
+  /// Whether this action should be shown when the [FloatingSearchBar]
+  /// is opened.
+  ///
+  /// If false, this action will be animated out when the
+  /// bar [FloatingSearchBar] closed.
   final bool showIfOpened;
+
+  /// Whether this action should be shown when the [FloatingSearchBar]
+  /// is closed.
+  ///
+  /// If false, this action will be animated out when the
+  /// bar [FloatingSearchBar] closed.
   final bool showIfClosed;
+
+  /// Creates a widget to be displayed in a row before or after the
+  /// input text of a [FloatingSearchBar].
+  ///
+  /// Typically this widget wraps a [CircularButton].
   const FloatingSearchBarAction({
     Key key,
     this.child,
@@ -18,9 +47,16 @@ class FloatingSearchBarAction extends StatefulWidget {
   })  : assert(builder != null || child != null),
         super(key: key);
 
+  /// Whether this [FloatingSearchBarAction] is shown when opened
+  /// and when closed.
   bool get isAlwaysShown => showIfOpened && showIfClosed;
 
-  factory FloatingSearchBarAction.hamburger({
+  /// A hamburger menu that when tapped opens the [Drawer]
+  /// of the nearest [Scaffold].
+  ///
+  /// When the [FloatingSearchBar] opens, the hamburger
+  /// transitions into a back button.
+  factory FloatingSearchBarAction.hamburgerToBack({
     double size = 24,
     Color color,
     bool showIfOpened,
@@ -30,9 +66,8 @@ class FloatingSearchBarAction extends StatefulWidget {
       showIfOpened: showIfOpened ?? true,
       showIfClosed: showIfClosed ?? true,
       builder: (context, animation) {
-        return IconButton(
-          iconSize: size,
-          padding: EdgeInsets.zero,
+        return CircularButton(
+          size: size,
           onPressed: () {
             final searchBar = FloatingSearchBar.of(context);
             if (searchBar?.isOpen == true) {
@@ -52,12 +87,14 @@ class FloatingSearchBarAction extends StatefulWidget {
     );
   }
 
+  /// A search icon that transitions into a clear icon
+  /// when the query of the [FloatingSearchBar] is not empty.
   factory FloatingSearchBarAction.searchToClear({
     double size = 24,
     Color color,
     bool showIfOpened,
     bool showIfClosed,
-    Duration duration = const Duration(milliseconds: 400),
+    Duration duration = const Duration(milliseconds: 900),
   }) {
     return FloatingSearchBarAction(
       showIfOpened: showIfOpened ?? true,
@@ -70,7 +107,7 @@ class FloatingSearchBarAction extends StatefulWidget {
           builder: (context, value, _) {
             final isEmpty = value.isEmpty;
 
-            return SearchToClear(
+            return _SearchToClear(
               isEmpty: isEmpty,
               size: size,
               color: color ?? searchBar?.iconColor,
@@ -89,8 +126,10 @@ class FloatingSearchBarAction extends StatefulWidget {
     );
   }
 
+  /// A convenience factory to wrap an [Icon] or an [IconData]
+  /// into an action.
   factory FloatingSearchBarAction.icon({
-    @required Icon icon,
+    @required dynamic icon,
     @required VoidCallback onTap,
     double size = 24.0,
     bool showIfOpened = false,
@@ -101,11 +140,10 @@ class FloatingSearchBarAction extends StatefulWidget {
     assert(onTap != null);
 
     return FloatingSearchBarAction(
-      child: IconButton(
-        iconSize: size,
-        icon: icon,
+      child: CircularButton(
+        size: size,
+        icon: icon is IconData ? Icon(icon) : icon,
         onPressed: onTap,
-        padding: EdgeInsets.zero,
       ),
       showIfClosed: showIfClosed,
       showIfOpened: showIfOpened,
@@ -130,13 +168,13 @@ class _FloatingSearchBarActionState extends State<FloatingSearchBarAction> {
   }
 }
 
-class SearchToClear extends StatelessWidget {
+class _SearchToClear extends StatelessWidget {
   final bool isEmpty;
   final Duration duration;
   final VoidCallback onTap;
   final Color color;
   final double size;
-  const SearchToClear({
+  const _SearchToClear({
     Key key,
     @required this.isEmpty,
     this.duration = const Duration(milliseconds: 500),
@@ -151,8 +189,7 @@ class SearchToClear extends StatelessWidget {
       value: isEmpty ? 0.0 : 1.0,
       duration: duration,
       builder: (context, value) {
-        return IconButton(
-          padding: EdgeInsets.zero,
+        return CircularButton(
           onPressed: onTap,
           icon: CustomPaint(
             size: Size.square(size),

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/rendering.dart';
 
+// ignore_for_file: public_member_api_docs
+
 /// A class that can schedule a function to run at a later time using Future.delayed.
 /// Additionally it supports canceling the future by not invoking the callback function
 /// if it was canceled before.

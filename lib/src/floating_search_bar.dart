@@ -10,6 +10,8 @@ import 'text_controller.dart';
 import 'util/util.dart';
 import 'widgets/widgets.dart';
 
+// ignore_for_file: public_member_api_docs
+
 typedef FloatingSearchBarBodyBuilder = Widget Function(
     BuildContext context, Animation<double> transition);
 
@@ -17,52 +19,261 @@ typedef OnQueryChangeCallback = void Function(String query);
 
 typedef OnFocusChangeCallback = void Function(bool isFocused);
 
+/// An expandable material floating search bar with customizable
+/// transitions similar to the ones used extensively
+/// by Google in their apps.
 class FloatingSearchBar extends ImplicitAnimation {
   // * --- Style properties --- *
+
+  /// The color used for elements such as the progress
+  /// indicator.
+  ///
+  /// Defaults to the themes accent color if not specified.
   final Color accentColor;
+
+  /// The color of the card.
+  ///
+  /// If not specified, defaults to `theme.cardColor`.
   final Color backgroundColor;
+
+  /// The color of the shadow drawn when `elevation > 0`.
+  ///
+  /// If not specified, defaults to `Colors.black54`.
   final Color shadowColor;
+
+  /// When specified, overrides the themes icon color for
+  /// this [FloatingSearchBar], for example to easily adjust
+  /// the icon color for all [actions] and [startActions].
   final Color iconColor;
+
+  /// The color that fills the available space when the
+  /// [FloatingSearchBar] is opened.
+  ///
+  /// Typically a black-ish color.
+  ///
+  /// If not specified, defaults to `Colors.black26`.
   final Color backdropColor;
+
+  /// The insets from the edges of its parent.
+  ///
+  /// This can be used to position the [FloatingSearchBar].
+  ///
+  /// If not specifed, the [FloatingSearchBar] will try to
+  /// position itself at the top offsetted by
+  /// `MediaQuery.of(context).viewPadding.top` to avoid
+  /// the status bar.
   final EdgeInsetsGeometry margins;
+
+  /// The padding of the card.
+  ///
+  /// Only the horizontal values will be honored.
   final EdgeInsetsGeometry padding;
+
+  /// The padding between [startActions], the input field and [actions],
+  /// respectively.
+  ///
+  /// Only the horizontal values will be honored.
   final EdgeInsetsGeometry insets;
+
+  /// The height of the card.
+  ///
+  /// If not specified, defaults to `48.0` pixels.
   final double height;
+
+  /// The elevation of the card.
+  ///
+  /// See also:
+  /// * [shadowColor] to adjust the color of the shadow.
   final double elevation;
+
+  /// The max width of the [FloatingSearchBar].
+  ///
+  /// By default the [FloatingSearchBar] will expand
+  /// to fill all the available width. This value can
+  /// be set to avoid this.
   final double maxWidth;
+
+  /// The max width of the [FloatingSearchBar] when opened.
+  ///
+  /// This can be used, when the max width when opened should
+  /// be different from the one specified by [maxWidth].
+  ///
+  /// When not specified, will use the value of [maxWidth].
   final double openMaxWidth;
+
+  /// How the [FloatingSearchBar] should be aligned when the
+  /// available width is bigger than the width specified by [maxWidth].
+  ///
+  /// When not specified, defaults to `0.0` which centers
+  /// the [FloatingSearchBar].
   final double axisAlignment;
+
+  /// How the [FloatingSearchBar] should be aligned when the
+  /// available width is bigger than the width specified by [openMaxWidth].
+  ///
+  /// When not specified, will use the value of [axisAlignment].
   final double openAxisAlignment;
+
+  /// The border of the card.
   final BorderSide border;
+
+  /// The [BorderRadius] of the card.
+  ///
+  /// When not specified, defaults to `BorderRadius.circular(4)`.
   final BorderRadius borderRadius;
+
+  /// The [TextStyle] for the hint in the [TextField].
   final TextStyle hintStyle;
+
+  /// The [TextStyle] for the input of the [TextField].
   final TextStyle queryStyle;
 
   // * --- Utility --- *
+  /// Whether the current query should be cleared when
+  /// the [FloatingSearchBar] was closed.
+  ///
+  /// When not specifed, defaults to `true`.
   final bool clearQueryOnClose;
+
+  /// Whether a hamburger menu should be shown when
+  /// there is a [Scaffold] with a [Drawer] in the widget
+  /// tree.
+  ///
+  /// When not specified, defaults to `true`.
   final bool showDrawerHamburger;
+
+  /// Whether the [FloatingSearchBar] should be closed when
+  /// the backdrop was tapped.
+  ///
+  /// When not specified, defaults to `true`.
   final bool closeOnBackdropTap;
+
+  /// The progress of the [LinearProgressIndicator] inside the card.
+  ///
+  /// When set to a `double` between [0..1], will show
+  /// show a determined [LinearProgressIndicator].
+  ///
+  /// When set to `true`, the [FloatingSearchBar] will
+  /// show an indetermined [LinearProgressIndicator].
+  ///
+  /// When `null` or `false`, will hide the [LinearProgressIndicator].
+  ///
+  /// When not specified, defaults to `null`.
   final dynamic progress;
-  final Duration openDuration;
-  final Curve openCurve;
+
+  /// The duration of the animation between opened and closed
+  /// state.
+  final Duration transitionDuration;
+
+  /// The curve for the animation between opened and closed
+  /// state.
+  final Curve transitionCurve;
+
+  /// The delay between the time the user stopped typing
+  /// and the invocation of the [onQueryChanged] callback.
+  ///
+  /// This is useful for example if you want to avoid doing
+  /// expensive tasks, such as making a network call, for every
+  /// single character.
   final Duration debounceDelay;
-  final Text title;
-  final dynamic hint;
+
+  /// A widget that is shown in place of the [TextField] when the
+  /// [FloatingSearchBar] is closed.
+  final Widget title;
+
+  /// The text value of the hint of the [TextField].
+  final String hint;
+
+  /// A list of widgets displayed in a row after the [TextField].
+  ///
+  /// Consider using [FloatingSearchBarAction]s for more advanced
+  /// actions that can interact with the [FloatingSearchBar].
+  ///
+  /// In LTR languages, they will be displayed to the left of
+  /// the [TextField].
   final List<Widget> actions;
+
+  /// A list of widgets displayed in a row before the [TextField].
+  ///
+  /// Consider using [FloatingSearchBarAction]s for more advanced
+  /// actions that can interact with the [FloatingSearchBar].
+  ///
+  /// In LTR languages, they will be displayed to the right of
+  /// the [TextField].
   final List<Widget> startActions;
+
+  /// A callback that gets invoked when the input of
+  /// the query inside the [TextField] changed.
+  ///
+  /// See also:
+  ///   * [debounceDelay] to delay the invocation of the callback
+  ///   until the user stopped typing.
   final OnQueryChangeCallback onQueryChanged;
-  final OnFocusChangeCallback onFocusChanged;
+
+  /// A callback that gets invoked when the user submitted
+  /// their query (e.g. hit the search button).
   final OnQueryChangeCallback onSubmitted;
+
+  /// A callback that gets invoked when the [FloatingSearchBar]
+  /// receives or looses focus.
+  final OnFocusChangeCallback onFocusChanged;
+
+  /// The transition to be used for animating between closed
+  /// and opened state.
+  ///
+  /// See also:
+  ///  * [FloatingSearchBarTransition], which is the base class for all transitions
+  ///    and can be used to create your own custom transition.
+  ///  * [ExpandingFloatingSearchBarTransition], which expands to eventually fill
+  ///    all of its available space, similar to the ones in Gmail or Google Maps.
+  ///  * [CircularFloatingSearchBarTransition], which clips its child in an
+  ///    expanding circle while animating.
+  ///  * [FadeInFloatingSearchBarTransition], which fades and translate its
+  ///    child.
   final FloatingSearchBarTransition transition;
+
+  /// The builder for the body of this [FloatingSearchBar].
+  ///
+  /// Usually, a list of items. Note that unless [isScrollControlled]
+  /// is set to `true`, the body of a [FloatingSearchBar] must not
+  /// have an unbounded height meaning that `shrinkWrap` should be set
+  /// to `true` on all [Scrollable]s.
   final FloatingSearchBarBodyBuilder bodyBuilder;
+
+  /// The controller for this [FloatingSearchBar] which can be used
+  /// to programatically open, close, show or hide the [FloatingSearchBar].
   final FloatingSearchBarController controller;
+
+  /// The [TextInputAction] to be used by the [TextField]
+  /// of this [FloatingSearchBar].
   final TextInputAction textInputAction;
+
+  /// The [TextInputType] of the [TextField]
+  /// of this [FloatingSearchBar].
   final TextInputType textInputType;
 
   // * --- Scrolling --- *
+  /// Whether the body of this [FloatingSearchBar] is using its
+  /// own [Scrollable].
+  ///
+  /// This will allow the body of the [FloatingSearchBar] to have an
+  /// unbounded height.
+  ///
+  /// Note that when set to `true`, the [FloatingSearchBar] won't be able
+  /// to dismiss itself when tapped below the height of child inside the
+  /// [Scrollable], when the child is smaller than the avaialble height.
   final bool isScrollControlled;
+
+  /// The [ScrollPhysics] of the [SingleChildScrollView] for the body of
+  /// this [FloatingSearchBar].
   final ScrollPhysics physics;
+
+  /// The [ScrollController] of the [SingleChildScrollView] for the body of
+  /// this [FloatingSearchBar].
   final ScrollController scrollController;
+
+  /// The [EdgeInsets] of the [SingleChildScrollView] for the body of
+  /// this [FloatingSearchBar].
   final EdgeInsets scrollPadding;
   const FloatingSearchBar({
     Key key,
@@ -90,11 +301,11 @@ class FloatingSearchBar extends ImplicitAnimation {
     this.showDrawerHamburger = true,
     this.closeOnBackdropTap = true,
     this.progress = false,
-    this.openDuration = const Duration(milliseconds: 500),
-    this.openCurve = Curves.ease,
+    this.transitionDuration = const Duration(milliseconds: 500),
+    this.transitionCurve = Curves.ease,
     this.debounceDelay = Duration.zero,
     this.title,
-    this.hint,
+    this.hint = 'Search...',
     this.actions,
     this.startActions,
     this.onQueryChanged,
@@ -129,7 +340,7 @@ class _FloatingSearchBarState
     final hasEndDrawer = Scaffold.of(context)?.hasEndDrawer ?? false;
     final showHamburgerMenu = hasEndDrawer && widget.showDrawerHamburger;
     return showHamburgerMenu
-        ? <Widget>[...actions, FloatingSearchBarAction.hamburger()]
+        ? <Widget>[...actions, FloatingSearchBarAction.hamburgerToBack()]
         : actions;
   }
 
@@ -139,7 +350,7 @@ class _FloatingSearchBarState
     final hasDrawer = Scaffold.of(context)?.hasDrawer ?? false;
     final showHamburgerMenu = hasDrawer && widget.showDrawerHamburger;
     return showHamburgerMenu
-        ? <Widget>[FloatingSearchBarAction.hamburger(), ...actions]
+        ? <Widget>[FloatingSearchBarAction.hamburgerToBack(), ...actions]
         : actions;
   }
 
@@ -169,7 +380,7 @@ class _FloatingSearchBarState
               start: hasStartActions ? 12 : 0, end: hasActions ? 12 : 0),
       insets: widget.insets ??
           EdgeInsetsDirectional.only(
-              start: hasStartActions ? 8 : 24, end: hasActions ? 16 : 24),
+              start: hasStartActions ? 16 : 24, end: hasActions ? 16 : 24),
       hintStyle: widget.hintStyle,
       queryStyle: widget.queryStyle,
     );
@@ -188,8 +399,8 @@ class _FloatingSearchBarState
       showDrawerHamburger: widget.showDrawerHamburger,
       closeOnBackdropTap: widget.closeOnBackdropTap,
       progress: widget.progress,
-      openDuration: widget.openDuration,
-      openCurve: widget.openCurve,
+      transitionDuration: widget.transitionDuration,
+      transitionCurve: widget.transitionCurve,
       debounceDelay: widget.debounceDelay,
       title: widget.title,
       hint: widget.hint,
@@ -219,8 +430,8 @@ class _FloatingSearchBar extends StatefulWidget {
   final bool showDrawerHamburger;
   final bool closeOnBackdropTap;
   final dynamic progress;
-  final Duration openDuration;
-  final Curve openCurve;
+  final Duration transitionDuration;
+  final Curve transitionCurve;
   final Duration debounceDelay;
   final Text title;
   final dynamic hint;
@@ -247,8 +458,8 @@ class _FloatingSearchBar extends StatefulWidget {
     @required this.showDrawerHamburger,
     @required this.closeOnBackdropTap,
     @required this.progress,
-    @required this.openDuration,
-    @required this.openCurve,
+    @required this.transitionDuration,
+    @required this.transitionCurve,
     @required this.debounceDelay,
     @required this.title,
     @required this.hint,
@@ -299,13 +510,12 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   Text get title => widget.title;
   String get hint => widget.hint?.toString() ?? '';
 
-  Curve get curve => widget.openCurve;
-  Duration get duration => widget.openDuration;
+  Curve get curve => widget.transitionCurve;
+  Duration get duration => widget.transitionDuration;
   Duration get queryCallbackDelay => widget.debounceDelay;
 
-  final Handler _handler = Handler();
-
   TextController _input;
+  final Handler _handler = Handler();
 
   AnimationController _controller;
   CurvedAnimation _animation;
@@ -399,11 +609,11 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   void didUpdateWidget(_FloatingSearchBar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (curve != oldWidget.openCurve) {
+    if (curve != oldWidget.transitionCurve) {
       _animation = CurvedAnimation(parent: _controller, curve: curve);
     }
 
-    if (duration != oldWidget.openDuration) {
+    if (duration != oldWidget.transitionDuration) {
       _controller.duration = duration;
     }
 
@@ -471,23 +681,23 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
     return SizedBox.expand(
       child: WillPopScope(
         onWillPop: _onPop,
-        child: AnimatedBuilder(
-          animation: animation,
-          builder: (context, _) {
-            return Stack(
-              children: <Widget>[
-                _buildBackdrop(),
-                _buildSearchBar(),
-              ],
-            );
-          },
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) => _onBodyScroll(notification),
+          child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, _) {
+              return Stack(
+                children: <Widget>[
+                  _buildBackdrop(),
+                  _buildSearchBar(),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
   }
-
-  double translation = 0.0;
-  double lastScrollOffset = 0.0;
 
   Widget _buildSearchBar() {
     final isInside = transition.isBodyInsideSearchBar;
@@ -550,26 +760,15 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
 
     if (isInside) return bar;
 
-    final maxWidth = transition.lerpMaxWidth();
-
     return AnimatedAlign(
       duration: isAnimating ? duration : Duration.zero,
-      curve: widget.openCurve,
+      curve: widget.transitionCurve,
       alignment: Alignment(isOpen ? openAxisAlignment : axisAlignment, 0.0),
       child: Column(
         children: <Widget>[
           bar,
           Expanded(
-            child: Container(
-              constraints: maxWidth != null
-                  ? BoxConstraints(
-                      maxWidth: maxWidth + transition.lerpMargin().horizontal)
-                  : null,
-              child: NotificationListener<ScrollNotification>(
-                onNotification: _onBodyScroll,
-                child: _buildBody(),
-              ),
-            ),
+            child: _buildBody(),
           ),
         ],
       ),
@@ -588,7 +787,14 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
 
     return IgnorePointer(
       ignoring: widget.isScrollControlled && value < 1.0,
-      child: body,
+      child: Container(
+        constraints: maxWidth != null
+            ? BoxConstraints(
+                maxWidth: maxWidth + transition.lerpMargin().horizontal,
+              )
+            : null,
+        child: body,
+      ),
     );
   }
 
@@ -635,52 +841,57 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
 
     final padding = toEdgeInsets(transition.lerpPadding());
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        if (transition.isBodyInsideSearchBar && value > 0.0)
-          Padding(
-            padding: EdgeInsets.only(top: height),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: _onBodyScroll,
-              child: widget.bodyBuilder(context, animation),
+    return SizedBox.expand(
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          if (transition.isBodyInsideSearchBar && value > 0.0)
+            Padding(
+              padding: EdgeInsets.only(top: height),
+              child: _buildBody(),
+            ),
+          Material(
+            elevation: transition.lerpInnerElevation(),
+            shadowColor: shadowColor,
+            child: Container(
+              height: height,
+              color: transition.lerpBackgroundColor(),
+              alignment: Alignment.topCenter,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    constraints: maxWidth != null
+                        ? BoxConstraints(maxWidth: transition.lerpInnerMaxWidth())
+                        : null,
+                    padding: EdgeInsets.only(left: padding.left, right: padding.right),
+                    child: content,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: transition.buildDivider(),
+                  ),
+                ],
+              ),
             ),
           ),
-        Material(
-          elevation: transition.lerpInnerElevation(),
-          shadowColor: shadowColor,
-          child: Container(
-            height: height,
-            color: transition.lerpBackgroundColor(),
-            alignment: Alignment.topCenter,
-            child: Stack(
-              children: [
-                Container(
-                  constraints: maxWidth != null
-                      ? BoxConstraints(maxWidth: transition.lerpInnerMaxWidth())
-                      : null,
-                  padding: EdgeInsets.only(left: padding.left, right: padding.right),
-                  child: content,
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: transition.buildDivider(),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildTextField() {
-    final showTextInput = _controller.value > 0.5;
+    final hasTitleOrQuery = widget.title != null || query.isNotEmpty;
+    final opacity = hasTitleOrQuery ? _queryToTitleAnimation.value : 1.0;
+
+    final showTextInput =
+        hasTitleOrQuery ? _controller.value > 0.5 : _controller.value > 0.0;
     if (showTextInput) {
       return Opacity(
-        opacity: _queryToTitleAnimation.value,
+        opacity: opacity,
         child: TextField(
           controller: _input,
+          focusNode: _input.node,
           maxLines: 1,
           autofocus: false,
           cursorColor: accentColor,
@@ -702,12 +913,20 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
         ),
       );
     } else {
+      final theme = Theme.of(context);
+      final hint = Text(
+        widget.hint,
+        style:
+            style.hintStyle ?? theme.textTheme.subtitle1.copyWith(color: theme.hintColor),
+        maxLines: 1,
+      );
+
       return SingleChildScrollView(
         padding: insets,
         scrollDirection: Axis.horizontal,
         child: Opacity(
-          opacity: _queryToTitleAnimation.value,
-          child: widget.title ?? const SizedBox(),
+          opacity: opacity,
+          child: hint,
         ),
       );
     }
@@ -774,7 +993,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
       }
     }
 
-    final currentActions = List.from(actions)
+    final currentActions = List<Widget>.from(actions)
       ..removeWhere((action) {
         if (action is FloatingSearchBarAction) {
           return (isOpen && !action.showIfOpened) || (!isOpen && !action.showIfClosed);

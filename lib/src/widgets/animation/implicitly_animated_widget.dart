@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+// ignore_for_file: public_member_api_docs
+
 /// A base Widget for implicit animations.
 abstract class ImplicitAnimation extends StatefulWidget {
   final Duration duration;
@@ -49,7 +51,7 @@ abstract class ImplicitAnimationState<T, W extends ImplicitAnimation> extends St
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     value = newValue;
     oldValue = newValue;
   }

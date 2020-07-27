@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'implicitly_animated_widget.dart';
 
+// ignore_for_file: public_member_api_docs
+
 class ImplicitAnimationBuilder<T> extends ImplicitAnimation {
   final T Function(T a, T b, double t) lerp;
   final T value;

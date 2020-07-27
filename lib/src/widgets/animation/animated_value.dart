@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'implicit_animation_builder.dart';
 
+// ignore_for_file: public_member_api_docs
+
 class AnimatedValue extends StatelessWidget {
   final double value;
   final Duration duration;

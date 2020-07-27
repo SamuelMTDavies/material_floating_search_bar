@@ -1,9 +1,19 @@
-
 import 'package:flutter/material.dart';
 
 import 'floating_search_bar.dart';
 import 'util/util.dart';
 
+// ignore_for_file: public_member_api_docs
+
+/// A utility widget that wraps its child in a [SingleChildScrollView]
+/// and dismisses the [FloatingSearchBar] when it was tapped below the
+/// child.
+///
+/// This widget is necessary as a [Scrollable] expands to fill its
+/// available space and also intercepts all touch events, thus we need
+/// to wrap the [Scrollable] inside a [GestureDetector], intercept the tap
+/// events before they get to the [Scrollable] and then decide based on the
+/// height of the child, whether a tap was below the content.
 class FloatingSearchBarDismissable extends StatefulWidget {
   final Widget child;
 
@@ -42,51 +52,54 @@ class FloatingSearchBarDismissable extends StatefulWidget {
         super(key: key);
 
   @override
-  _FloatingSearchBarDismissableState createState() => _FloatingSearchBarDismissableState();
+  _FloatingSearchBarDismissableState createState() =>
+      _FloatingSearchBarDismissableState();
 }
 
 class _FloatingSearchBarDismissableState<E> extends State<FloatingSearchBarDismissable> {
-  final _key = GlobalKey();
+  final childKey = GlobalKey();
 
-  double _listHeight = 0;
-  double _tapDy = 0;
+  double childHeight = 0;
+  double tapDy = 0;
 
-  void _measure() => postFrame(() {
-        _listHeight = _key?.height;
-      });
+  void _measure() {
+    postFrame(
+      () => childHeight = childKey?.height,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     _measure();
 
-    return Stack(
-      children: <Widget>[
-        GestureDetector(
-          onTapDown: (details) => _tapDy = details.localPosition.dy,
-          onPanDown: (details) => _tapDy = details.localPosition.dy,
-          onPanUpdate: (details) => _tapDy = details.localPosition.dy,
-          onTap: () {
-            if (_tapDy > _listHeight) {
-              FloatingSearchBar.of(context).close();
-            }
-          },
-          child: SingleChildScrollView(
-            controller: widget.controller,
-            physics: widget.physics,
-            padding: widget.padding,
-            child: NotificationListener<SizeChangedLayoutNotification>(
-              onNotification: (_) {
-                _measure();
-                return true;
-              },
-              child: SizeChangedLayoutNotifier(
-                key: _key,
-                child: widget.child,
-              ),
-            ),
+    return GestureDetector(
+      onTapDown: (details) => tapDy = details.localPosition.dy,
+      onPanDown: (details) => tapDy = details.localPosition.dy,
+      onPanUpdate: (details) => tapDy = details.localPosition.dy,
+      onTap: () {
+        if (tapDy > childHeight) {
+          FloatingSearchBar.of(context).close();
+        }
+      },
+      child: SingleChildScrollView(
+        controller: widget.controller,
+        physics: widget.physics,
+        padding: widget.padding.add(
+          EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
         ),
-      ],
+        child: NotificationListener<SizeChangedLayoutNotification>(
+          onNotification: (_) {
+            _measure();
+            return true;
+          },
+          child: SizeChangedLayoutNotifier(
+            key: childKey,
+            child: widget.child,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+// ignore_for_file: public_member_api_docs
+
 extension NumExtension on num {
   double get radians => this * (math.pi / 180.0);
 

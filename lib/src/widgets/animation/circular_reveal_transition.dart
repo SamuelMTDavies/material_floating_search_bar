@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+// ignore_for_file: public_member_api_docs
+
 class CircularReveal extends StatelessWidget {
   final double fraction;
   final Alignment origin;
@@ -78,7 +80,9 @@ class _CircularRevealClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     if (oldClipper is _CircularRevealClipper) {
-      return oldClipper.fraction != fraction || oldClipper.origin != origin || oldClipper.offset != offset;
+      return oldClipper.fraction != fraction ||
+          oldClipper.origin != origin ||
+          oldClipper.offset != offset;
     }
 
     return false;
