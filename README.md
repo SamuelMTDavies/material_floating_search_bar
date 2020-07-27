@@ -2,11 +2,13 @@
 
 A Flutter implementation of an expandable floating search bar similar to the ones used extensively by Google in their own apps.
 
-<img width="205px" alt="CircularFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/circular_example.gif"/>
+<p>
+  <img width="205px" alt="CircularFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/circular_example.gif"/>
 
-<img width="205px" alt="ExpandingFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/expanding_example.gif"/>
+  <img width="205px" alt="ExpandingFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/expanding_example.gif"/>
 
-<img width="205px" alt="SlideFadeFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/slide_fade_example.gif"/>
+  <img width="205px" alt="SlideFadeFloatingSearchBarTransition" src="https://raw.githubusercontent.com/bnxm/material_floating_search_bar/master/assets/slide_fade_example.gif"/>
+</p>
 
 Click [here](https://github.com/bnxm/material_floating_search_bar/blob/master/example/lib/main.dart) to view the full example.
 
