@@ -106,11 +106,8 @@ There are many customization options:
 | `accentColor`               | The color used for elements such as the progress indicator. <br> Defaults to the themes accent color if not specified. 
 | `backgroundColor`           | The color of the card. <br> If not specified, defaults to `theme.cardColor`.
 | `shadowColor`               | The color of the shadow drawn when `elevation > 0`. <br> If not specified, defaults to `Colors.black54`.
-| `iconColor`                 | When specified, overrides the themes icon color for
-this `FloatingSearchBar`, for example to easily adjust
-the icon color for all `actions` and `startActions`.
-| `backdropColor`             | The color that fills the available space when the
-`FloatingSearchBar` is opened. <br> Typically a black-ish color. <br> If not specified, defaults to `Colors.black26`.
+| `iconColor`                 | When specified, overrides the themes icon color for this `FloatingSearchBar`, for example to easily adjust the icon color for all `actions` and `startActions`.
+| `backdropColor`             | The color that fills the available space when the `FloatingSearchBar` is opened. <br> Typically a black-ish color. <br> If not specified, defaults to `Colors.black26`.
 | `margins`                   | The insets from the edges of its parent. <br> This can be used to position the `FloatingSearchBar`. <br> If not specifed, the `FloatingSearchBar` will try to position itself at the top offsetted by `MediaQuery.of(context).viewPadding.top` to avoid the status bar.
 | `padding`                   | The padding of the card. <br> Only the horizontal values will be honored.
 | `insets`                    | The padding between `startActions`, the input field and `actions` respectively. <br> Only the horizontal values will be honored.
