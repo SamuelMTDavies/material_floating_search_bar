@@ -115,10 +115,8 @@ There are many customization options:
 | `elevation`                 | The elevation of the card. 
 | `maxWidth`                  | The max width of the `FloatingSearchBar`. <br> By default the `FloatingSearchBar` will expand to fill all the available width. <br> This value can be set to avoid this.
 | `openMaxWidth`              | The max width of the `FloatingSearchBar` when opened. <br> This can be used, when the max width when opened should be different from the one specified by `maxWidth`. <br> When not specified, will use the value of `maxWidth`.
-| `axisAlignment`             | How the `FloatingSearchBar` should be aligned when the
-available width is bigger than the width specified by [maxWidth]. <br> When not specified, defaults to `0.0` which centers the `FloatingSearchBar`.
-| `openAxisAlignment`         | How the `FloatingSearchBar` should be aligned when the
-available width is bigger than the width specified by `openMaxWidth`. <br> When not specified, will use the value of `axisAlignment`.
+| `axisAlignment`             | How the `FloatingSearchBar` should be aligned when the available width is bigger than the width specified by [maxWidth]. <br> When not specified, defaults to `0.0` which centers the `FloatingSearchBar`.
+| `openAxisAlignment`         | How the `FloatingSearchBar` should be aligned when the available width is bigger than the width specified by `openMaxWidth`. <br> When not specified, will use the value of `axisAlignment`.
 | `border`                    | The border of the card.
 | `borderRadius`              | The `BorderRadius` of the card. <br> When not specified, defaults to `BorderRadius.circular(4)`.
 | `hintStyle`                 | The `TextStyle` for the hint in the `TextField`.
