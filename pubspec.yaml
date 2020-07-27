@@ -1,5 +1,5 @@
 name: material_floating_search_bar
-description: A new Flutter package project.
+description: A Flutter implementation of an expandable floating search bar similar to the ones used extensively by Google in their own apps.
 version: 0.1.0
 author: Bendix Mahnke
 homepage:

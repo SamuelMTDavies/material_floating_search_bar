@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'floating_search_bar_actions.dart';
 import 'floating_search_bar_dismissable.dart';
@@ -228,7 +229,7 @@ class FloatingSearchBar extends ImplicitAnimation {
   ///    all of its available space, similar to the ones in Gmail or Google Maps.
   ///  * [CircularFloatingSearchBarTransition], which clips its child in an
   ///    expanding circle while animating.
-  ///  * [FadeInFloatingSearchBarTransition], which fades and translate its
+  ///  * [SlideFadeFloatingSearchBarTransition], which fades and translate its
   ///    child.
   final FloatingSearchBarTransition transition;
 
@@ -598,7 +599,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
       TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 1),
     ]).animate(animation);
 
-    transition = widget.transition ?? ExpandingFloatingSearchBarTransition();
+    transition = widget.transition ?? SlideFadeFloatingSearchBarTransition();
 
     _scrollController = widget.scrollController ?? ScrollController();
 
@@ -775,29 +776,6 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
     );
   }
 
-  Widget _buildBody() {
-    final body = transition.buildTransition(
-      FloatingSearchBarDismissable(
-        controller: _scrollController,
-        padding: widget.scrollPadding,
-        physics: widget.physics,
-        child: widget.bodyBuilder(context, animation),
-      ),
-    );
-
-    return IgnorePointer(
-      ignoring: widget.isScrollControlled && value < 1.0,
-      child: Container(
-        constraints: maxWidth != null
-            ? BoxConstraints(
-                maxWidth: maxWidth + transition.lerpMargin().horizontal,
-              )
-            : null,
-        child: body,
-      ),
-    );
-  }
-
   Widget _buildInnerBar() {
     Widget buildShader({bool isLeft}) {
       final insets = toEdgeInsets(this.insets);
@@ -846,9 +824,11 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
         alignment: Alignment.topCenter,
         children: <Widget>[
           if (transition.isBodyInsideSearchBar && value > 0.0)
-            Padding(
-              padding: EdgeInsets.only(top: height),
-              child: _buildBody(),
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.only(top: height),
+                child: _buildBody(),
+              ),
             ),
           Material(
             elevation: transition.lerpInnerElevation(),
@@ -880,17 +860,42 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
     );
   }
 
-  Widget _buildTextField() {
-    final hasTitleOrQuery = widget.title != null || query.isNotEmpty;
-    final opacity = hasTitleOrQuery ? _queryToTitleAnimation.value : 1.0;
+  Widget _buildBody() {
+    final body = transition.buildTransition(
+      FloatingSearchBarDismissable(
+        controller: _scrollController,
+        padding: widget.scrollPadding,
+        physics: widget.physics,
+        child: widget.bodyBuilder(context, animation),
+      ),
+    );
 
-    final showTextInput =
-        hasTitleOrQuery ? _controller.value > 0.5 : _controller.value > 0.0;
+    return IgnorePointer(
+      ignoring: widget.isScrollControlled && value < 1.0,
+      child: Container(
+        constraints: maxWidth != null
+            ? BoxConstraints(
+                maxWidth: maxWidth + transition.lerpMargin().horizontal,
+              )
+            : null,
+        child: body,
+      ),
+    );
+  }
+
+  Widget _buildTextField() {
+    final hasQuery = !widget.clearQueryOnClose && query.isNotEmpty;
+    final showTitle = widget.title != null || (!hasQuery && query.isNotEmpty);
+    final opacity = showTitle ? _queryToTitleAnimation.value : 1.0;
+
+    final showTextInput = showTitle ? _controller.value > 0.5 : _controller.value > 0.0;
+
+    Widget input;
     if (showTextInput) {
-      return Opacity(
-        opacity: opacity,
+      input = IntrinsicWidth(
         child: TextField(
           controller: _input,
+          scrollPhysics: const NeverScrollableScrollPhysics(),
           focusNode: _input.node,
           maxLines: 1,
           autofocus: false,
@@ -899,37 +904,39 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
           textInputAction: widget.textInputAction,
           keyboardType: widget.textInputType,
           onSubmitted: widget.onSubmitted,
-          decoration: InputDecoration(
+          decoration: InputDecoration.collapsed(
             hintText: hint,
             hintStyle: style.hintStyle,
-            contentPadding: insets,
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedErrorBorder: InputBorder.none,
           ),
         ),
       );
     } else {
-      final theme = Theme.of(context);
-      final hint = Text(
-        widget.hint,
-        style:
-            style.hintStyle ?? theme.textTheme.subtitle1.copyWith(color: theme.hintColor),
-        maxLines: 1,
-      );
+      if (widget.title != null) {
+        input = widget.title;
+      } else {
+        final theme = Theme.of(context);
+        final textTheme = theme.textTheme;
 
-      return SingleChildScrollView(
-        padding: insets,
-        scrollDirection: Axis.horizontal,
-        child: Opacity(
-          opacity: opacity,
-          child: hint,
-        ),
-      );
+        final textStyle = hasQuery
+            ? style.queryStyle ?? textTheme.subtitle1
+            : style.hintStyle ?? textTheme.subtitle1.copyWith(color: theme.hintColor);
+
+        input = Text(
+          hasQuery ? query : widget.hint,
+          style: textStyle,
+          maxLines: 1,
+        );
+      }
     }
+
+    return SingleChildScrollView(
+      padding: insets,
+      scrollDirection: Axis.horizontal,
+      child: Opacity(
+        opacity: opacity,
+        child: input,
+      ),
+    );
   }
 
   Widget _buildProgressBar() {
@@ -1013,15 +1020,15 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
             scale: animation,
             child: action,
           );
+        } else {
+          return SizeFadeTransition(
+            animation: animation,
+            axis: Axis.horizontal,
+            axisAlignment: 1.0,
+            sizeFraction: 0.25,
+            child: Center(child: action),
+          );
         }
-
-        return SizeFadeTransition(
-          animation: animation,
-          axis: Axis.horizontal,
-          axisAlignment: 1.0,
-          sizeFraction: 0.25,
-          child: action,
-        );
       }
 
       return action;

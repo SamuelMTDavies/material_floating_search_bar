@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'floating_search_bar.dart';
@@ -59,8 +61,10 @@ class FloatingSearchBarDismissable extends StatefulWidget {
 class _FloatingSearchBarDismissableState<E> extends State<FloatingSearchBarDismissable> {
   final childKey = GlobalKey();
 
-  double childHeight = 0;
-  double tapDy = 0;
+  double childHeight = 0.0;
+  double tapDy = 0.0;
+
+  double scrollOffset = 0.0;
 
   void _measure() {
     postFrame(
@@ -77,26 +81,44 @@ class _FloatingSearchBarDismissableState<E> extends State<FloatingSearchBarDismi
       onPanDown: (details) => tapDy = details.localPosition.dy,
       onPanUpdate: (details) => tapDy = details.localPosition.dy,
       onTap: () {
-        if (tapDy > childHeight) {
-          FloatingSearchBar.of(context).close();
+        final padding = widget.padding;
+        final offset = max(scrollOffset - padding.top, 0.0);
+
+        void close() => FloatingSearchBar.of(context).close();
+
+        if (tapDy < padding.top) {
+          close();
+        } else if (tapDy > (childHeight - offset)) {
+          close();
         }
       },
-      child: SingleChildScrollView(
-        controller: widget.controller,
-        physics: widget.physics,
-        padding: widget.padding.add(
-          EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          final metrics = notification.metrics;
+
+          if (metrics.axis == Axis.vertical) {
+            scrollOffset = metrics.pixels;
+          }
+
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: widget.controller,
+          physics: widget.physics,
+          padding: widget.padding.add(
+            EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
           ),
-        ),
-        child: NotificationListener<SizeChangedLayoutNotification>(
-          onNotification: (_) {
-            _measure();
-            return true;
-          },
-          child: SizeChangedLayoutNotifier(
-            key: childKey,
-            child: widget.child,
+          child: NotificationListener<SizeChangedLayoutNotification>(
+            onNotification: (_) {
+              _measure();
+              return true;
+            },
+            child: SizeChangedLayoutNotifier(
+              key: childKey,
+              child: widget.child,
+            ),
           ),
         ),
       ),

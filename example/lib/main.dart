@@ -1,4 +1,6 @@
+import 'package:example/example.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -9,7 +11,15 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'place.dart';
 import 'search_model.dart';
 
-void main() => runApp(MaterialFloatingSearchBarExample());
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white,
+    ),
+  );
+
+  runApp(MaterialFloatingSearchBarExample());
+}
 
 class MaterialFloatingSearchBarExample extends StatelessWidget {
   @override
@@ -77,9 +87,11 @@ class Home extends StatelessWidget {
     return Consumer<SearchModel>(
       builder: (context, model, _) {
         return FloatingSearchBar(
+          backgroundColor: Colors.white,
+          clearQueryOnClose: true,
           hint: 'Search for a new Place...',
           transitionDuration: const Duration(milliseconds: 800),
-          transitionCurve: Curves.easeInOut,
+          transitionCurve: Curves.easeInOutCubic,
           physics: const BouncingScrollPhysics(),
           axisAlignment: isPortrait ? 0.0 : -1.0,
           openAxisAlignment: 0.0,
@@ -88,7 +100,7 @@ class Home extends StatelessWidget {
           progress: model.isLoading,
           debounceDelay: const Duration(milliseconds: 500),
           onQueryChanged: model.onQueryChanged,
-          transition: CircularFloatingSearchBarTransition(),
+          transition: SlideFadeFloatingSearchBarTransition(translation: 48.0),
           bodyBuilder: (context, transition) {
             return Material(
               color: Colors.white,
@@ -150,20 +162,22 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      place.name,
-                      style: textTheme.subtitle1,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      place.level2Address,
-                      style: textTheme.bodyText2.copyWith(color: Colors.grey.shade600),
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        place.name,
+                        style: textTheme.subtitle1,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        place.level2Address,
+                        style: textTheme.bodyText2.copyWith(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -206,6 +220,7 @@ class Home extends StatelessWidget {
       child: BottomNavigationBar(
         currentIndex: 0,
         elevation: 16,
+        type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         backgroundColor: Colors.white,
         selectedItemColor: Colors.blue,

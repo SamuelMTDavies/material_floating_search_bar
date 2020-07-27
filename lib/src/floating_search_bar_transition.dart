@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import 'widgets/widgets.dart';
 ///     all of its available space, similar to the ones in Gmail or Google Maps.
 ///  * [CircularFloatingSearchBarTransition], which clips its child in an
 ///    expanding circle while animating.
-///  * [FadeInFloatingSearchBarTransition], which fades and translate its
+///  * [SlideFadeFloatingSearchBarTransition], which fades and translate its
 ///    child.
 abstract class FloatingSearchBarTransition {
   FloatingSearchBarState searchBar;
@@ -152,7 +153,7 @@ class ExpandingFloatingSearchBarTransition extends FloatingSearchBarTransition {
 /// bar.
 abstract class OverlayingFloatingSearchBarTransition extends FloatingSearchBarTransition {
   /// The vertical spacing between the bar of the [FloatingSearchBar] and its body.
-  final double spacing;
+  final double _spacing;
 
   /// A divider to seperate the body of the [FloatingSearchBar] from the bar.
   ///
@@ -161,16 +162,24 @@ abstract class OverlayingFloatingSearchBarTransition extends FloatingSearchBarTr
   final Widget divider;
   // ignore: public_member_api_docs
   OverlayingFloatingSearchBarTransition({
-    this.spacing,
+    double spacing,
     this.divider,
-  });
+  }) : _spacing = spacing;
+
+  double get spacing => _spacing ?? searchBar?.widget?.scrollPadding?.top ?? 0.0;
 
   @override
   bool get isBodyInsideSearchBar => false;
 
   bool get reachedTop => spacing <= offset;
 
-  double get scrollT => spacing == 0.0 ? 1.0 : (offset / spacing).clamp(0.0, 1.0) * t;
+  double get scrollT {
+    if (spacing == 0.0) {
+      return offset <= 0.0 ? 0.0 : 1.0;
+    } else {
+      return (offset / spacing).clamp(0.0, 1.0) * t;
+    }
+  }
 
   @override
   Widget buildDivider() {
@@ -202,24 +211,16 @@ abstract class OverlayingFloatingSearchBarTransition extends FloatingSearchBarTr
 
   @override
   Widget buildTransition(Widget content) {
-    final margin = this.margin.resolve(Directionality.of(context));
-    final startMargin = EdgeInsets.only(
-      left: margin.left,
-      right: margin.right,
-    );
-    final endMargin = startMargin.add(EdgeInsets.only(top: spacing));
+    final margin = this.margin.resolve(Directionality.of(context)).copyWith(
+          top: 0.0,
+          bottom: 0.0,
+        );
 
     return Padding(
-      padding: EdgeInsets.lerp(
-        startMargin,
-        endMargin,
-        t,
-      ),
-      child: buildChildTransition(content),
+      padding: margin,
+      child: content,
     );
   }
-
-  Widget buildChildTransition(Widget content);
 
   @override
   void onBodyScrolled() {
@@ -249,7 +250,7 @@ class CircularFloatingSearchBarTransition extends OverlayingFloatingSearchBarTra
   /// Creates a [FloatingSearchBarTransition],
   /// {@macro circular_floating_search_bar_transition}
   CircularFloatingSearchBarTransition({
-    double spacing = 8.0,
+    double spacing,
     Widget divider,
   }) : super(
           spacing: spacing,
@@ -257,13 +258,17 @@ class CircularFloatingSearchBarTransition extends OverlayingFloatingSearchBarTra
         );
 
   @override
-  Widget buildChildTransition(Widget content) {
-    return Transform.translate(
-      offset: Offset(0, -16 * (1 - t)),
-      child: CircularReveal(
-        fraction: t,
-        origin: const Alignment(0.0, 1.0),
-        child: content,
+  Widget buildTransition(Widget content) {
+    final spacing = math.max(this.spacing - offset, 0.0);
+
+    return super.buildTransition(
+      Transform.translate(
+        offset: Offset(0, -spacing * (1 - t)),
+        child: CircularReveal(
+          fraction: t,
+          origin: const Alignment(0.0, 1.0),
+          child: content,
+        ),
       ),
     );
   }
@@ -271,28 +276,37 @@ class CircularFloatingSearchBarTransition extends OverlayingFloatingSearchBarTra
 
 /// A [FloatingSearchBarTransition]
 /// {@template fade_in_floating_search_bar_transition}
-/// which fades and translates its child.
+/// which fades and vertically translates its child.
 /// {@endtemplate}
-class FadeInFloatingSearchBarTransition extends OverlayingFloatingSearchBarTransition {
+class SlideFadeFloatingSearchBarTransition extends OverlayingFloatingSearchBarTransition {
+  final double translation;
+
   /// Creates a [FloatingSearchBarTransition],
   /// {@macro fade_in_floating_search_bar_transition}
-  FadeInFloatingSearchBarTransition({
-    double spacing = 8.0,
+  SlideFadeFloatingSearchBarTransition({
+    double spacing,
     Widget divider,
+    this.translation = 32.0,
   }) : super(
           spacing: spacing,
           divider: divider,
         );
 
   @override
-  Widget buildChildTransition(Widget content) {
-    final translation = height + spacing;
+  Widget buildTransition(Widget content) {
+    final offset = lerpDouble(
+      translation,
+      0.0,
+      Curves.easeIn.transform(t),
+    );
 
-    return Transform.translate(
-      offset: Offset(0, -translation * (1 - Curves.easeIn.transform(t))),
-      child: Opacity(
-        opacity: t,
-        child: content,
+    return super.buildTransition(
+      Transform.translate(
+        offset: Offset(0, offset),
+        child: Opacity(
+          opacity: t,
+          child: content,
+        ),
       ),
     );
   }
