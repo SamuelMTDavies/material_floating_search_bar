@@ -96,3 +96,23 @@ Widget buildFloatingSearchBar() {
   );
 }
 ```
+
+### Customizations
+
+There are many customization options:
+
+| Field                       | Description             |
+| --------------------------- | ----------------------- |
+| `accentColor`               | The color used for elements such as the progress indicator.  Defaults to the themes accent color if not specified. |
+
+### Transitions
+
+As of now there are three types of transitions that are exemplified above:
+
+| Transition                             | Description                           |
+| -------------------------------------- | ------------------------------------- |
+| `CircularFloatingSearchBarTransition`  | Clips its child in an expanding circle.
+| `ExpandingFloatingSearchBarTransition` | Fills all the available space with the background of the `FloatingSearchBar`. Similar to the ones used in many Google apps like Gmail.
+| `SlideFadeFloatingSearchBarTransition` | Vertically slides and fades its child.
+
+You can also easily create you own custom transition by extending `FloatingSearchBarTransition`.

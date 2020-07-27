@@ -547,14 +547,14 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
     setState(() {});
   }
 
-  bool _isShown = true;
-  bool get isShown => _isShown;
-  set isShown(bool value) {
-    if (value == isShown) return;
+  bool _isVisible = true;
+  bool get isVisible => _isVisible;
+  set isVisible(bool value) {
+    if (value == isVisible) return;
 
     // Only hide the bar when it is not opened.
     if (!isOpen || value) {
-      _isShown = value;
+      _isVisible = value;
       setState(() {});
     }
   }
@@ -645,8 +645,8 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   void open() => isOpen = true;
   void close() => isOpen = false;
 
-  void show() => isShown = true;
-  void hide() => isShown = false;
+  void show() => isVisible = true;
+  void hide() => isVisible = false;
 
   void clear() => _input.clear();
 
@@ -712,7 +712,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
         final borderRadius = transition.lerpBorderRadius();
 
         final container = Semantics(
-          hidden: !isShown,
+          hidden: !isVisible,
           focusable: true,
           focused: isOpen,
           child: Padding(
@@ -750,7 +750,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
           onTap: () => isOpen = !isOpen,
           child: AnimatedTranslation(
             duration: duration,
-            translation: Offset(0.0, isShown ? 0.0 : -1.0),
+            translation: Offset(0.0, isVisible ? 0.0 : -1.0),
             isFractional: true,
             curve: Curves.ease,
             child: container,
@@ -1050,30 +1050,51 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   }
 }
 
+/// A controller for a [FloatingSearchBar].
 class FloatingSearchBarController {
+  /// Creates a controller for a [FloatingSearchBar].
+  FloatingSearchBarController();
+
   FloatingSearchBarState _state;
 
+  /// Opens/Expands the [FloatingSearchBar].
   void open() => _open?.call();
   VoidCallback _open;
 
+  /// Closes/Collapses the [FloatingSearchBar].
   void close() => _close?.call();
   VoidCallback _close;
 
+  /// Cleares the current query.
   void clear() => _clear?.call();
   VoidCallback _clear;
 
+  /// Visually reveals the [FloatingSearchBar] when
+  /// it was previously hidden via [hide].
   void show() => _show?.call();
   VoidCallback _show;
 
+  /// Visually hides the [FloatingSearchBar].
   void hide() => _hide?.call();
   VoidCallback _hide;
 
+  /// Whether the [FloatingSearchBar] is currently
+  /// opened/expanded.
   bool get isOpen => _state?.isOpen == true;
+
+  /// Whether the [FloatingSearchBar] is currently
+  /// closed/collapsed.
   bool get isClosed => _state?.isOpen == false;
 
-  bool get isShown => _state?.isShown == true;
-  bool get isHidden => _state?.isShown == false;
+  /// Whether the [FloatingSearchBar] is currently
+  /// not hidden.
+  bool get isVisible => _state?.isVisible == true;
 
+  /// Whether the [FloatingSearchBar] is currently
+  /// not visible.
+  bool get isHidden => _state?.isVisible == false;
+
+  /// Disposes this controller.
   void dispose() {
     _open = null;
     _close = null;
