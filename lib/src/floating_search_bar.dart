@@ -165,8 +165,6 @@ class FloatingSearchBar extends ImplicitAnimation {
   /// show an indetermined [LinearProgressIndicator].
   ///
   /// When `null` or `false`, will hide the [LinearProgressIndicator].
-  ///
-  /// When not specified, defaults to `null`.
   final dynamic progress;
 
   /// The duration of the animation between opened and closed
@@ -275,7 +273,7 @@ class FloatingSearchBar extends ImplicitAnimation {
   /// This will allow the body of the [FloatingSearchBar] to have an
   /// unbounded height.
   ///
-  /// Note that when set to `true`, the [FloatingSearchBar] won't be able
+  /// 
   /// to dismiss itself when tapped below the height of child inside the
   /// [Scrollable], when the child is smaller than the avaialble height.
   final bool isScrollControlled;
