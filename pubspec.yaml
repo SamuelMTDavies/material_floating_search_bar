@@ -1,8 +1,7 @@
 name: material_floating_search_bar
 description: A Flutter implementation of an expandable floating search bar similar to the ones used extensively by Google in their own apps.
 version: 0.1.0
-author: Bendix Mahnke
-homepage:
+repository: https://github.com/bnxm/material_floating_search_bar
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -11,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.1.8
 
 dev_dependencies:
   flutter_test:
