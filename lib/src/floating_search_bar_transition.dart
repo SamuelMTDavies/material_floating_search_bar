@@ -23,7 +23,7 @@ import 'widgets/widgets.dart';
 ///  * [SlideFadeFloatingSearchBarTransition], which fades and translate its
 ///    child.
 abstract class FloatingSearchBarTransition {
-  MaterialFloatingSearchBarState searchBar;
+  FloatingSearchBarState searchBar;
   BuildContext get context => searchBar?.context;
   Animation get animation => searchBar?.animation;
   double get t => searchBar?.value;
