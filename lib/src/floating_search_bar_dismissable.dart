@@ -58,7 +58,8 @@ class FloatingSearchBarDismissable extends StatefulWidget {
       _FloatingSearchBarDismissableState();
 }
 
-class _FloatingSearchBarDismissableState<E> extends State<FloatingSearchBarDismissable> {
+class _FloatingSearchBarDismissableState<E>
+    extends State<FloatingSearchBarDismissable> {
   final childKey = GlobalKey();
 
   double childHeight = 0.0;

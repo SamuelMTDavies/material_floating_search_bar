@@ -99,11 +99,11 @@ Widget buildFloatingSearchBar() {
 
 #### Usage with `Scrollables`
 
-By default, the `Widget` returned by the `builder` is not allowed to have an unbounded (infinite) height. This is necessary in order for the search bar to be able to dismiss itself, when the user taps below the area of the child. (For example, when have a list of items but there are not enough items to fill the whole screen as in the gifs shown above, the user would expect to be able to close the search bar when tapping below the last item in the list).
+By default, the `Widget` returned by the `builder` is not allowed to have an unbounded (infinite) height. This is necessary in order for the search bar to be able to dismiss itself, when the user taps below the area of the child. (For example, when you have a list of items but there are not enough items to fill the whole screen, as shown in the gifs above, the user would expect to be able to close the search bar when tapping below the last item in the list).
 
 Therefore, `shrinkWrap` should be set to `true` on all `Scrollables` and `physics` to `NeverScrollableScrollPhysics`. On `Columns`, the `mainAxisSize` should be set to `MainAxisSize.min`. 
 
-If you don't want this behavior, you can set the `isScrollControlled` flag to `true`. Then you are allowed to use expanding `Widgets` with the caveat that the search bar may not be able to detect taps on the backdrop area.
+If you don't want this behavior, you can set the `isScrollControlled` flag to `true`. Then you are allowed to use expanding `Widgets` such as `Scrollables` with the caveat that the search bar may not be able to detect taps on the backdrop area.
 
 ### Customizations
 

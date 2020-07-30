@@ -151,7 +151,8 @@ class FloatingSearchBarAction extends StatefulWidget {
   }
 
   @override
-  _FloatingSearchBarActionState createState() => _FloatingSearchBarActionState();
+  _FloatingSearchBarActionState createState() =>
+      _FloatingSearchBarActionState();
 }
 
 class _FloatingSearchBarActionState extends State<FloatingSearchBarAction> {

@@ -56,7 +56,8 @@ class _CircularRevealClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final x = (origin.x + 1.0) / 2.0;
     final y = 1.0 - ((origin.y + 1.0) / 2.0);
-    final center = Offset((size.width * x) + offset.dx, (size.height * y) + offset.dy);
+    final center =
+        Offset((size.width * x) + offset.dx, (size.height * y) + offset.dy);
     final minRadius = this.minRadius ?? 0.0;
     final maxRadius = this.maxRadius ?? calcMaxRadius(size, center);
 

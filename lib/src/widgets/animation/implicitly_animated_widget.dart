@@ -15,8 +15,8 @@ abstract class ImplicitAnimation extends StatefulWidget {
         super(key: key);
 }
 
-abstract class ImplicitAnimationState<T, W extends ImplicitAnimation> extends State<W>
-    with SingleTickerProviderStateMixin {
+abstract class ImplicitAnimationState<T, W extends ImplicitAnimation>
+    extends State<W> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   AnimationController get controller => _controller;
 

@@ -20,7 +20,8 @@ class ImplicitAnimationBuilder<T> extends ImplicitAnimation {
   }) : super(key, duration, curve);
 
   @override
-  _ImplicitAnimationBuilderState createState() => _ImplicitAnimationBuilderState<T>();
+  _ImplicitAnimationBuilderState createState() =>
+      _ImplicitAnimationBuilderState<T>();
 }
 
 class _ImplicitAnimationBuilderState<T>
