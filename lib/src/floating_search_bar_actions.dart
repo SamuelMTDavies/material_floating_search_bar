@@ -107,7 +107,7 @@ class FloatingSearchBarAction extends StatefulWidget {
           builder: (context, value, _) {
             final isEmpty = value.isEmpty;
 
-            return _SearchToClear(
+            return SearchToClear(
               isEmpty: isEmpty,
               size: size,
               color: color ?? searchBar?.iconColor,
@@ -169,13 +169,14 @@ class _FloatingSearchBarActionState extends State<FloatingSearchBarAction> {
   }
 }
 
-class _SearchToClear extends StatelessWidget {
+// ignore_for_file: public_member_api_docs
+class SearchToClear extends StatelessWidget {
   final bool isEmpty;
   final Duration duration;
   final VoidCallback onTap;
   final Color color;
   final double size;
-  const _SearchToClear({
+  const SearchToClear({
     Key key,
     @required this.isEmpty,
     this.duration = const Duration(milliseconds: 500),

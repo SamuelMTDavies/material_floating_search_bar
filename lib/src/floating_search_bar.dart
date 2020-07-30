@@ -344,8 +344,8 @@ class FloatingSearchBar extends ImplicitAnimation {
   @override
   _FloatingSearchBarState createState() => _FloatingSearchBarState();
 
-  static FloatingSearchBarState of(BuildContext context) {
-    return context.findAncestorStateOfType<FloatingSearchBarState>();
+  static MaterialFloatingSearchBarState of(BuildContext context) {
+    return context.findAncestorStateOfType<MaterialFloatingSearchBarState>();
   }
 }
 
@@ -413,7 +413,7 @@ class _FloatingSearchBarState
 
   @override
   Widget builder(BuildContext context, FloatingSearchBarStyle style) {
-    return _FloatingSearchBar(
+    return _MaterialFloatingSearchBar(
       body: widget.body,
       style: style,
       clearQueryOnClose: widget.clearQueryOnClose,
@@ -445,7 +445,7 @@ class _FloatingSearchBarState
   }
 }
 
-class _FloatingSearchBar extends StatefulWidget {
+class _MaterialFloatingSearchBar extends StatefulWidget {
   final Widget body;
   final FloatingSearchBarStyle style;
 
@@ -477,7 +477,7 @@ class _FloatingSearchBar extends StatefulWidget {
   final ScrollPhysics physics;
   final ScrollController scrollController;
   final EdgeInsets scrollPadding;
-  const _FloatingSearchBar({
+  const _MaterialFloatingSearchBar({
     Key key,
     @required this.body,
     @required this.style,
@@ -509,10 +509,11 @@ class _FloatingSearchBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FloatingSearchBarState createState() => FloatingSearchBarState();
+  MaterialFloatingSearchBarState createState() =>
+      MaterialFloatingSearchBarState();
 }
 
-class FloatingSearchBarState extends State<_FloatingSearchBar>
+class MaterialFloatingSearchBarState extends State<_MaterialFloatingSearchBar>
     with SingleTickerProviderStateMixin {
   dynamic get progress => widget.progress;
 
@@ -635,7 +636,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   }
 
   @override
-  void didUpdateWidget(_FloatingSearchBar oldWidget) {
+  void didUpdateWidget(_MaterialFloatingSearchBar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (curve != oldWidget.transitionCurve) {
@@ -1106,7 +1107,7 @@ class FloatingSearchBarController {
   /// Creates a controller for a [FloatingSearchBar].
   FloatingSearchBarController();
 
-  FloatingSearchBarState _state;
+  MaterialFloatingSearchBarState _state;
 
   /// Opens/Expands the [FloatingSearchBar].
   void open() => _open?.call();
