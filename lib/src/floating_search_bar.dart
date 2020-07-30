@@ -25,6 +25,12 @@ typedef OnFocusChangeCallback = void Function(bool isFocused);
 /// transitions similar to the ones used extensively
 /// by Google in their apps.
 class FloatingSearchBar extends ImplicitAnimation {
+  /// The widget displayed below the [FloatingSearchBar].
+  ///
+  /// This is useful, if the [FloatingSearchBar] should react
+  /// to scroll events (i.e. hide from view when a [Scrollable]
+  /// is being scrolled down and show it again when scrolled up).
+  final Widget body;
   // * --- Style properties --- *
 
   /// The color used for elements such as the progress
@@ -254,11 +260,11 @@ class FloatingSearchBar extends ImplicitAnimation {
   /// of this [FloatingSearchBar].
   final TextInputType textInputType;
 
-  /// Enable or disable autocorrection of the [TextField] of 
+  /// Enable or disable autocorrection of the [TextField] of
   /// this [FloatingSearchBar].
   final bool autocorrect;
 
-  /// The [ToolbarOptions] of the [TextField] of 
+  /// The [ToolbarOptions] of the [TextField] of
   /// this [FloatingSearchBar].
   final ToolbarOptions toolbarOptions;
 
@@ -289,6 +295,7 @@ class FloatingSearchBar extends ImplicitAnimation {
     Key key,
     Duration implicitDuration = const Duration(milliseconds: 600),
     Curve implicitCurve = Curves.linear,
+    this.body,
     this.accentColor,
     this.backgroundColor,
     this.shadowColor = Colors.black87,
@@ -332,7 +339,7 @@ class FloatingSearchBar extends ImplicitAnimation {
     this.physics,
     this.scrollController,
     this.scrollPadding = const EdgeInsets.symmetric(vertical: 16),
-  }) : assert(builder != null),
+  })  : assert(builder != null),
         assert(progress == null || (progress is num || progress is bool)),
         super(key, implicitDuration, implicitCurve);
 
@@ -406,6 +413,7 @@ class _FloatingSearchBarState
   @override
   Widget builder(BuildContext context, FloatingSearchBarStyle style) {
     return _FloatingSearchBar(
+      body: widget.body,
       style: style,
       clearQueryOnClose: widget.clearQueryOnClose,
       showDrawerHamburger: widget.showDrawerHamburger,
@@ -437,6 +445,7 @@ class _FloatingSearchBarState
 }
 
 class _FloatingSearchBar extends StatefulWidget {
+  final Widget body;
   final FloatingSearchBarStyle style;
 
   // * --- Utility --- *
@@ -469,6 +478,7 @@ class _FloatingSearchBar extends StatefulWidget {
   final EdgeInsets scrollPadding;
   const _FloatingSearchBar({
     Key key,
+    @required this.body,
     @required this.style,
     @required this.clearQueryOnClose,
     @required this.showDrawerHamburger,
@@ -696,7 +706,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
   Widget build(BuildContext context) {
     transition.searchBar = this;
 
-    return SizedBox.expand(
+    final searchBar = SizedBox.expand(
       child: WillPopScope(
         onWillPop: _onPop,
         child: NotificationListener<ScrollNotification>(
@@ -715,6 +725,18 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
         ),
       ),
     );
+
+    if (widget.body != null) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          widget.body,
+          searchBar,
+        ],
+      );
+    } else {
+      return searchBar;
+    }
   }
 
   Widget _buildSearchBar() {
