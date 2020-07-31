@@ -941,6 +941,7 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
       input = IntrinsicWidth(
         child: TextField(
           controller: _input,
+          scrollPadding: EdgeInsets.zero,
           scrollPhysics: const NeverScrollableScrollPhysics(),
           focusNode: _input.node,
           maxLines: 1,
@@ -952,9 +953,16 @@ class FloatingSearchBarState extends State<_FloatingSearchBar>
           textInputAction: widget.textInputAction,
           keyboardType: widget.textInputType,
           onSubmitted: widget.onSubmitted,
-          decoration: InputDecoration.collapsed(
+          decoration: InputDecoration(
             hintText: hint,
             hintStyle: style.hintStyle,
+            contentPadding: EdgeInsets.zero,
+            border: InputBorder.none,
+            errorBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            focusedErrorBorder: InputBorder.none,
           ),
         ),
       );
